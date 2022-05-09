@@ -26,9 +26,10 @@ public class EmployeeController {
 	}
 
 	@GetMapping("/get_employees")
-	public ResponseEntity<Employee> getEmployeeById(@RequestParam(value = "id") Long employeeId)
+	public ResponseEntity<Employee> getEmployeeById(@RequestParam(value = "id") String employeeId)
 			throws ResourceNotFoundException {
-		Employee employee = employeeRepository.findById(employeeId)
+		Long id = Long.parseLong(employeeId);
+		Employee employee = employeeRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Employee not found for this id :: " + employeeId));
 		return ResponseEntity.ok().body(employee);
 	}
@@ -45,11 +46,13 @@ public class EmployeeController {
 	}
 
 	@PutMapping("/edit_employees")
-	public ResponseEntity<Employee> updateEmployee(@RequestParam(value = "id") Long employeeId,
+	public ResponseEntity<Employee> updateEmployee(@RequestParam(value = "id") String employeeId,
 												   @RequestParam(value = "first_name", required = false) String firstname,
 												   @RequestParam(value = "last_name", required = false) String lastname,
 												   @RequestParam(value = "email_id", required = false) String emailId) throws ResourceNotFoundException {
-		Employee employee = employeeRepository.findById(employeeId)
+
+		Long id = Long.parseLong(employeeId);
+		Employee employee = employeeRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Employee not found for this id :: " + employeeId));
 
 		employee.setEmailId(emailId);
@@ -60,9 +63,11 @@ public class EmployeeController {
 	}
 
 	@DeleteMapping("/delete_employees")
-	public Map<String, Boolean> deleteEmployee(@RequestParam(value = "id") Long employeeId)
+	public Map<String, Boolean> deleteEmployee(@RequestParam(value = "id") String employeeId)
 			throws ResourceNotFoundException {
-		Employee employee = employeeRepository.findById(employeeId)
+
+		Long id = Long.parseLong(employeeId);
+		Employee employee = employeeRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Employee not found for this id :: " + employeeId));
 
 		employeeRepository.delete(employee);
